@@ -5,7 +5,7 @@ namespace Omega\AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Omega\AppBundle\Entity\Test;
+use Omega\AppBundle\Entity\Demande;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class DefaultController extends Controller
@@ -15,19 +15,19 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $filename = $this->get('kernel')->getRootDir().'/../bin/csv/test2.csv';
+        $filename = $this->get('kernel')->getRootDir().'/../bin/csv/prototype.csv';
         ini_set('auto_detect_line_endings',TRUE);
 
         $normalizer = new ObjectNormalizer();
         $em         = $this->getDoctrine()->getManager();
         $results   = $em->createQueryBuilder()
-            ->select('t')
-            ->from('AppBundle:Test', 't', 't.id')
+            ->select('d')
+            ->from('AppBundle:Demande', 'd', 'd.id')
             ->getQuery()
             ->getResult()
         ;
 
-        $mapping    = $this->getParameter('omega.admin.import.test.mapping');
+        $mapping    = $this->getParameter('omega.admin.import.demande.mapping');
 
         $handle = fopen($filename,'r');
 
@@ -36,34 +36,50 @@ class DefaultController extends Controller
 
             if(!empty($array) && $array[0] != 'id') {
 
-                $array = array_combine(array_keys($mapping), array_values($array));
+               // var_dump($array);die("ko");
+                $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mapping), array_values($array))));
 
+        //      var_dump($array);die("ko");
                 if (array_key_exists($id = $array['id'], $results)) {
-                    $test   = $results[$id];
+
+                    $demande   = $results[$id];
+
                     unset($results[$id]);
                 } else {
-                    $test = new Test();
+                    $demande = new Demande();
                 }
 
-                $test = $normalizer->denormalize(
-                    array_map(array($this, 'filtreData'), $array),
-                    'Omega\AppBundle\Entity\Test',
+                $demande = $normalizer->denormalize(
+                    $array,
+                    'Omega\AppBundle\Entity\Demande',
                     null,
-                    array('object_to_populate' => $test)
+                    array('object_to_populate' =>  $demande)
                 );
-
-                $em->persist($test);
+               // var_dump($demande);die("ko");
+                $em->persist( $demande);
             }
         }
 
         $em->flush();
 
         ini_set('auto_detect_line_endings',FALSE);
-        die('piw');
+        die('OK');
     }
 
     public function filtreData($data) {
         return trim($data, '«»');
+    }
+
+    public function formatData($object) {
+
+        $object['priority'] = intval($object['priority']);
+
+        $object['dateDebut'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateDebut']);
+        $object['dateFin'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateFin']);
+        $object['chargeTotal'] = floatval($object['chargeTotal']);
+
+        return $object;
+
     }
 
 }

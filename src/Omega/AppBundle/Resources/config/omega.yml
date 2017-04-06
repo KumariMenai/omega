@@ -1,8 +1,13 @@
 app:
     import:
-        test:
+        demande:
             mapping:
-                id:      A
-                nom:     B
-                prenom:  C
-                age:     D
+                id:                            A
+                idClientDemande:               B
+                type:                          C
+                objet:                         D
+                responsable:                   E
+                priority:                      F
+                dateDebut:                     G
+                dateFin:                       H
+                chargeTotal:                   I

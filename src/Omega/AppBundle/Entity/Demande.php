@@ -23,15 +23,23 @@ class Demande
     /**
      * @var string
      *
-     * @ORM\Column(name=IdClientDemande, type="string")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(name="IdDemande", type="string", length=11)
      */
     protected $id;
 
     /**
-     * @var char
+     * @var string
      *
-     * @ORM\Column(name="Type_demande", type="char")
+     * @ORM\Column(name="IdClientDemande", type="string" , length=100)
+     */
+    protected $idClientDemande;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Type_demande", type="string", length=3)
      */
     protected $type;
 
@@ -48,9 +56,9 @@ class Demande
 
 
     /**
-     * @var char
+     * @var string
      *
-     * @ORM\Column(name="ref_ressource", type="char")
+     * @ORM\Column(name="ref_ressource", type="string")
      */
     protected $responsable;
    // protected $application;
@@ -64,23 +72,23 @@ class Demande
     protected $priority;
 
     /**
-     * @var date
+     * @var \DateTime
      *
-     * @ORM\Column(name="Date_emission", type="date")
+     * @ORM\Column(name="Date_emission", type="datetime")
      */
     protected $dateDebut;
 
     /**
-     * @var date
+     * @var \DateTime
      *
-     * @ORM\Column(name="Date_livraison_prevue", type="date")
+     * @ORM\Column(name="Date_livraison_prevue", type="datetime")
      */
     protected $dateFin;
 
     /**
-     * @var double
+     * @var float
      *
-     * @ORM\Column(name="charge_vendue", type="double")
+     * @ORM\Column(name="charge_vendue", type="float")
      */
     protected $chargeTotal;
 
@@ -101,7 +109,23 @@ class Demande
     }
 
     /**
-     * @return char
+     * @return string
+     */
+    public function getIdClientDemande()
+    {
+        return $this->idClientDemande;
+    }
+
+    /**
+     * @param string $idClientDemande
+     */
+    public function setIdClientDemande($idClientDemande)
+    {
+        $this->idClientDemande = $idClientDemande;
+    }
+
+    /**
+     * @return string
      */
     public function getType()
     {
@@ -109,7 +133,7 @@ class Demande
     }
 
     /**
-     * @param char $type
+     * @param string $type
      */
     public function setType($type)
     {
@@ -133,7 +157,7 @@ class Demande
     }
 
     /**
-     * @return char
+     * @return string
      */
     public function getResponsable()
     {
@@ -141,7 +165,7 @@ class Demande
     }
 
     /**
-     * @param char $responsable
+     * @param string $responsable
      */
     public function setResponsable($responsable)
     {
@@ -165,7 +189,7 @@ class Demande
     }
 
     /**
-     * @return date
+     * @return \DateTime
      */
     public function getDateDebut()
     {
@@ -173,7 +197,7 @@ class Demande
     }
 
     /**
-     * @param date $dateDebut
+     * @param \DateTime $dateDebut
      */
     public function setDateDebut($dateDebut)
     {
@@ -181,7 +205,7 @@ class Demande
     }
 
     /**
-     * @return date
+     * @return \DateTime
      */
     public function getDateFin()
     {
@@ -189,12 +213,13 @@ class Demande
     }
 
     /**
-     * @param date $dateFin
+     * @param \DateTime $dateFin
      */
     public function setDateFin($dateFin)
     {
         $this->dateFin = $dateFin;
-    }
+
+            }
 
     /**
      * @return float
@@ -211,6 +236,9 @@ class Demande
     {
         $this->chargeTotal = $chargeTotal;
     }
+
+
+
 
 
 }

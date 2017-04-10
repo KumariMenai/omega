@@ -63,7 +63,7 @@ class DefaultController extends Controller
         $em->flush();
 
         ini_set('auto_detect_line_endings',FALSE);
-        die('OK');
+        die('OK !');
     }
 
     public function filtreData($data) {

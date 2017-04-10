@@ -6,6 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Omega\AppBundle\Entity\Demande;
+
+use Omega\AppBundle\Entity;
+use Omega\AppBundle\Entity\ForfaitBudget;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class DefaultController extends Controller
@@ -20,9 +23,19 @@ class DefaultController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $em         = $this->getDoctrine()->getManager();
-        $results   = $em->createQueryBuilder()
-            ->select('d')
-            ->from('AppBundle:Demande', 'd', 'd.id')
+
+        $resultId   = $em->createQueryBuilder()
+            ->select('d.id')
+            ->from('AppBundle:Demande', 'd')
+            ->orderBy('d.id','DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        $resultCodeFB   = $em->createQueryBuilder()
+            ->select('f')
+            ->from('AppBundle:ForfaitBudget', 'f', 'f.codeForfaitBudget')
             ->getQuery()
             ->getResult()
         ;
@@ -30,24 +43,21 @@ class DefaultController extends Controller
         $mapping    = $this->getParameter('omega.admin.import.demande.mapping');
 
         $handle = fopen($filename,'r');
+        $idDemande = $resultId['id'];
 
-        while ( ($data = fgetcsv($handle) ) !== FALSE ) {
+        while (($data = fgetcsv($handle) ) !== FALSE ) {
+
             $array = explode(';', $data[0]);
+            if(!empty($array) && $array[0] != 'idClientDemande') {
 
-            if(!empty($array) && $array[0] != 'id') {
-
-               // var_dump($array);die("ko");
                 $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mapping), array_values($array))));
 
-        //      var_dump($array);die("ko");
-                if (array_key_exists($id = $array['id'], $results)) {
+                $forfaitObject   = $resultCodeFB[$array['application']];
 
-                    $demande   = $results[$id];
+                ++ $idDemande;
 
-                    unset($results[$id]);
-                } else {
-                    $demande = new Demande();
-                }
+                $demande = new Demande();
+                $demande->setId($idDemande);
 
                 $demande = $normalizer->denormalize(
                     $array,
@@ -55,8 +65,9 @@ class DefaultController extends Controller
                     null,
                     array('object_to_populate' =>  $demande)
                 );
-               // var_dump($demande);die("ko");
-                $em->persist( $demande);
+                $demande->setApplication($forfaitObject->getIDFORFAITBUDGET());
+
+                $em->persist($demande);
             }
         }
 
@@ -72,12 +83,12 @@ class DefaultController extends Controller
 
     public function formatData($object) {
 
-        $object['priority'] = intval($object['priority']);
 
+        $object['priority'] = intval($object['priority']);
         $object['dateDebut'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateDebut']);
         $object['dateFin'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateFin']);
         $object['chargeTotal'] = floatval($object['chargeTotal']);
-
+        //$object['application'] = intval($object['application']);
         return $object;
 
     }

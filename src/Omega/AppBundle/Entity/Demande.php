@@ -11,7 +11,7 @@ namespace Omega\AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Test
+ * Class Demande
  * @package Omega\AppBundle\Entity
  *
  * @ORM\Entity
@@ -24,7 +24,8 @@ class Demande
      * @var string
      *
      * @ORM\Id
-     * @ORM\Column(name="IdDemande", type="string", length=11)
+     *
+     * @ORM\Column(name="IdDemande", type="string", length=100)
      */
     protected $id;
 
@@ -61,7 +62,18 @@ class Demande
      * @ORM\Column(name="ref_ressource", type="string")
      */
     protected $responsable;
-   // protected $application;
+
+
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="REF_FORFAIT_BUDGET", type="string")
+     * @ORM\ManyToOne(targetEntity="ForfaitBudget")
+     * @ORM\JoinColumn(name="REF_FORFAIT_BUDGET", referencedColumnName="CODE_FORFAIT_BUDGET")
+     */
+    protected $application;
 
 
     /**
@@ -91,6 +103,8 @@ class Demande
      * @ORM\Column(name="charge_vendue", type="float")
      */
     protected $chargeTotal;
+
+
 
     /**
      * @return string
@@ -138,6 +152,22 @@ class Demande
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param string $application
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
     }
 
     /**
@@ -218,8 +248,7 @@ class Demande
     public function setDateFin($dateFin)
     {
         $this->dateFin = $dateFin;
-
-            }
+    }
 
     /**
      * @return float

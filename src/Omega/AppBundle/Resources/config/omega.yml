@@ -2,6 +2,7 @@ app:
     import:
         demande:
             mapping:
+<<<<<<< HEAD
                 idClientDemande:               A
                 type:                          B
                 objet:                         C
@@ -11,3 +12,14 @@ app:
                 dateDebut:                     G
                 dateFin:                       H
                 chargeTotal:                   I
+=======
+                idClientDemande:               B
+                type:                          C
+                objet:                         D
+                responsable:                   E
+                application:                   F
+                priority:                      G
+                dateDebut:                     H
+                dateFin:                       I
+                chargeTotal:                   J
+>>>>>>> remotes/origin/develop

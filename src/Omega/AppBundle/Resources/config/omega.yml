@@ -2,11 +2,11 @@ app:
     import:
         demande:
             mapping:
-                id:                            A
-                idClientDemande:               B
-                type:                          C
-                objet:                         D
-                responsable:                   E
+                idClientDemande:               A
+                type:                          B
+                objet:                         C
+                responsable:                   D
+                application:                   E
                 priority:                      F
                 dateDebut:                     G
                 dateFin:                       H

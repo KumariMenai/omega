@@ -20,17 +20,19 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Demande
 {
+
     /**
      * @var string
      *
      * @ORM\Id
      * @ORM\Column(name="IdDemande", type="string", length=11)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
+
     /**
      * @var string
-     *
      * @ORM\Column(name="IdClientDemande", type="string" , length=100)
      */
     protected $idClientDemande;
@@ -63,6 +65,12 @@ class Demande
     protected $responsable;
    // protected $application;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="ForfaitBudget", cascade={"persist"})
+     * @ORM\Column(name="REF_FORFAIT_BUDGET", type="integer")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    protected $application;
 
     /**
      * @var integer
@@ -237,8 +245,20 @@ class Demande
         $this->chargeTotal = $chargeTotal;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
-
-
+    /**
+     * @param mixed $application
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+    }
 
 }

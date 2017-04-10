@@ -20,9 +20,17 @@ class DefaultController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $em         = $this->getDoctrine()->getManager();
+
         $results   = $em->createQueryBuilder()
             ->select('d')
-            ->from('AppBundle:Demande', 'd', 'd.id')
+            ->from('AppBundle:Demande', 'd', 'd.idClientDemande')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $forfaits   = $em->createQueryBuilder()
+            ->select('f')
+            ->from('AppBundle:ForfaitBudget', 'f', 'f.idForfaitBudget')
             ->getQuery()
             ->getResult()
         ;
@@ -34,15 +42,17 @@ class DefaultController extends Controller
         while ( ($data = fgetcsv($handle) ) !== FALSE ) {
             $array = explode(';', $data[0]);
 
-            if(!empty($array) && $array[0] != 'id') {
+            if(!empty($array) && $array[0] != 'idClientDemande') {
 
-               // var_dump($array);die("ko");
                 $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mapping), array_values($array))));
 
-        //      var_dump($array);die("ko");
-                if (array_key_exists($id = $array['id'], $results)) {
+                if (array_key_exists($id = $array['idClientDemande'], $results)) {
 
                     $demande   = $results[$id];
+
+                    if (array_key_exists($idF = $array['application'], $forfaits)) {
+                        $demande->setApplication($forfaits[$idF]);
+                    }
 
                     unset($results[$id]);
                 } else {
@@ -55,7 +65,7 @@ class DefaultController extends Controller
                     null,
                     array('object_to_populate' =>  $demande)
                 );
-               // var_dump($demande);die("ko");
+
                 $em->persist( $demande);
             }
         }
@@ -71,12 +81,14 @@ class DefaultController extends Controller
     }
 
     public function formatData($object) {
-
+        $object['application'] = intval($object['application']);
         $object['priority'] = intval($object['priority']);
 
         $object['dateDebut'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateDebut']);
         $object['dateFin'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateFin']);
         $object['chargeTotal'] = floatval($object['chargeTotal']);
+
+
 
         return $object;
 

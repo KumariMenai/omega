@@ -23,22 +23,19 @@ class DefaultController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $em         = $this->getDoctrine()->getManager();
-        $results   = $em->createQueryBuilder()
-            ->select('d')
-            ->from('AppBundle:Demande', 'd', 'd.id')
-            ->getQuery()
-            ->getResult()
-        ;
+
         $resultId   = $em->createQueryBuilder()
             ->select('d.id')
             ->from('AppBundle:Demande', 'd')
             ->orderBy('d.id','DESC')
+            ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
+
         $resultCodeFB   = $em->createQueryBuilder()
             ->select('f')
-            ->from('AppBundle:ForfaitBudget', 'f')
+            ->from('AppBundle:ForfaitBudget', 'f', 'f.codeForfaitBudget')
             ->getQuery()
             ->getResult()
         ;
@@ -46,7 +43,7 @@ class DefaultController extends Controller
         $mapping    = $this->getParameter('omega.admin.import.demande.mapping');
 
         $handle = fopen($filename,'r');
-        $idDemande = $resultId[0];
+        $idDemande = $resultId['id'];
 
         while (($data = fgetcsv($handle) ) !== FALSE ) {
 
@@ -55,27 +52,12 @@ class DefaultController extends Controller
 
                 $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mapping), array_values($array))));
 
-                if (array_key_exists($id = $array['idClientDemande'], $results)) {
-                    $demande   = $results[$id];
-                    unset($results[$id]);
-                } else {
-                    $resultCodeFB   = $em->createQueryBuilder()
-                        ->select('f')
-                        ->from('AppBundle:ForfaitBudget', 'f')
-                        ->where('f.codeForfaitBudget LIKE :string')
-                        ->setParameter('string', $array['application'])
-                        ->getQuery()
-                        ->getResult()
-                    ;
-                    //var_dump($array);die();
-                    //var_dump($resultCodeFB[0]->getIDFORFAITBUDGET());die();
-                    //$array['application'] = strval($resultCodeFB[0]->getIDFORFAITBUDGET());
-                    ++ $idDemande['id'];
-                    $demande = new Demande();
-                    $demande->setId($idDemande['id']);
+                $forfaitObject   = $resultCodeFB[$array['application']];
 
+                ++ $idDemande;
 
-                }
+                $demande = new Demande();
+                $demande->setId($idDemande);
 
                 $demande = $normalizer->denormalize(
                     $array,
@@ -83,7 +65,7 @@ class DefaultController extends Controller
                     null,
                     array('object_to_populate' =>  $demande)
                 );
-                $demande->setApplication($resultCodeFB[0]->getIDFORFAITBUDGET());
+                $demande->setApplication($forfaitObject->getIDFORFAITBUDGET());
 
                 $em->persist($demande);
             }

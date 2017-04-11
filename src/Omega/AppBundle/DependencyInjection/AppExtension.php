@@ -25,6 +25,7 @@ class AppExtension extends Extension
 
 
         $container->setParameter('omega.admin.import.demande.mapping',  $configs['import']['demande']['mapping']);
+        $container->setParameter('omega.admin.import.status.mapping',  $configs['import']['status']['mapping']);
 
     }
 }

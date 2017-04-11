@@ -1,3 +1,3 @@
-idClientDemande;type;objet;responsable;application;priority;dateDebut;dateFin;chargeTotal
-«99001651»;«HTM»;«Comité»;«ADA»;«VEGA»;«12»;«2009-01-02 16:27:52»;«2050-01-01 00:00:00»;«6.0000»
-«20016513»;«HTM»;«Comité»;«ADA»;«VEGA»;«12»;«2009-01-02 16:27:52»;«2050-01-01 00:00:00»;«6.0000»
+idClientDemande;type;objet;responsable;status;application;priority;dateDebut;dateFin;chargeTotal
+«99001651»;«HTM»;«Comité»;«ADA»;«Work In Progress»;«VEGA»;«12»;«2009-01-02 16:27:52»;«2050-01-01 00:00:00»;«6.0000»
+«20016513»;«HTM»;«Comité»;«ADA»;«Work In Progress»;«VEGA»;«12»;«2009-01-02 16:27:52»;«2050-01-01 00:00:00»;«6.0000»

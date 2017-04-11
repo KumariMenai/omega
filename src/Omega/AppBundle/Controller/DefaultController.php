@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Omega\AppBundle\Entity\Demande;
-
 use Omega\AppBundle\Entity;
 use Omega\AppBundle\Entity\ForfaitBudget;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -24,9 +23,19 @@ class DefaultController extends Controller
         $normalizer = new ObjectNormalizer();
         $em         = $this->getDoctrine()->getManager();
 
+        $dateNow = date('Y-m-d H:i:s');
+
         $resultId   = $em->createQueryBuilder()
             ->select('d.id')
             ->from('AppBundle:Demande', 'd')
+            ->orderBy('d.id','DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+        $resultIdDemandeDansEtat   = $em->createQueryBuilder()
+            ->select('d.id')
+            ->from('AppBundle:DemandeSeTrouveDansEtat', 'd')
             ->orderBy('d.id','DESC')
             ->setMaxResults(1)
             ->getQuery()
@@ -40,25 +49,45 @@ class DefaultController extends Controller
             ->getResult()
         ;
 
-        $mapping    = $this->getParameter('omega.admin.import.demande.mapping');
+        $mappingDemande    = $this->getParameter('omega.admin.import.demande.mapping');
+        $mappingStatus     = $this->getParameter('omega.admin.import.status.mapping');
 
         $handle = fopen($filename,'r');
         $idDemande = $resultId['id'];
+        $idStatus = $resultIdDemandeDansEtat['id'];
+
 
         while (($data = fgetcsv($handle) ) !== FALSE ) {
 
+
             $array = explode(';', $data[0]);
+
+
             if(!empty($array) && $array[0] != 'idClientDemande') {
 
-                $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mapping), array_values($array))));
+                $statusMappingSplice = array_splice($array,4,-5);
+
+
+                $status = $mappingStatus[$this->filtreData($statusMappingSplice[0])];
+
+                $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mappingDemande), array_values($array))));
 
                 $forfaitObject   = $resultCodeFB[$array['application']];
 
                 ++ $idDemande;
+                ++ $idStatus;
 
                 $demande = new Demande();
                 $demande->setId($idDemande);
 
+                $DemandeSeTrouveDansEtat = new Entity\DemandeSeTrouveDansEtat();
+                $DemandeSeTrouveDansEtat->setId($idStatus);
+                $DemandeSeTrouveDansEtat->setIdDemande($idDemande);
+                $DemandeSeTrouveDansEtat->setCodeEtat($status);
+                $DemandeSeTrouveDansEtat->setDateEntree($this->dateNow($dateNow));
+
+
+                //var_dump($DemandeSeTrouveDansEtat);var_dump($demande);die();
                 $demande = $normalizer->denormalize(
                     $array,
                     'Omega\AppBundle\Entity\Demande',
@@ -68,6 +97,7 @@ class DefaultController extends Controller
                 $demande->setApplication($forfaitObject->getIDFORFAITBUDGET());
 
                 $em->persist($demande);
+                $em->persist($DemandeSeTrouveDansEtat);
             }
         }
 
@@ -88,9 +118,14 @@ class DefaultController extends Controller
         $object['dateDebut'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateDebut']);
         $object['dateFin'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateFin']);
         $object['chargeTotal'] = floatval($object['chargeTotal']);
+        //$object['$dateEntree'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['$dateEntree']);
         //$object['application'] = intval($object['application']);
         return $object;
 
+    }
+
+    public function dateNow($dateNow){
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $dateNow);;
     }
 
 }

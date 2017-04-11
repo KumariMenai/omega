@@ -23,8 +23,9 @@ class AppExtension extends Extension
         $configuration = new Configuration();
         $configs       = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('omega.admin.import.demande.start_at', $configs['import']['demande']['start_at']);
+
         $container->setParameter('omega.admin.import.demande.mapping',  $configs['import']['demande']['mapping']);
+        $container->setParameter('omega.admin.import.statut.mapping',  $configs['import']['statut']['mapping']);
 
     }
 }

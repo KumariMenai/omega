@@ -5,11 +5,8 @@
  * Date: 04/04/2017
  * Time: 11:53
  */
-
 namespace Omega\AppBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Class Demande
  * @package Omega\AppBundle\Entity
@@ -17,61 +14,41 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="demande_ou_projet")
  */
-
 class Demande
 {
-
     /**
      * @var string
      *
      * @ORM\Id
-<<<<<<< HEAD
-     * @ORM\Column(name="IdDemande", type="string", length=11)
-     * @ORM\GeneratedValue(strategy="AUTO")
-=======
      *
      * @ORM\Column(name="IdDemande", type="string", length=100)
->>>>>>> remotes/origin/develop
      */
     protected $id;
-
-
     /**
      * @var string
+     *
      * @ORM\Column(name="IdClientDemande", type="string" , length=100)
      */
     protected $idClientDemande;
-
-
     /**
      * @var string
      *
      * @ORM\Column(name="Type_demande", type="string", length=3)
      */
     protected $type;
-
     /**
      * @var string
      *
      * @ORM\Column(name="libelle", type="string")
      */
     protected $objet;
-
-
-
     // protected $statut;
-
-
     /**
      * @var string
      *
      * @ORM\Column(name="ref_ressource", type="string")
      */
     protected $responsable;
-
-
-
-
     /**
      * @var string
      *
@@ -80,44 +57,30 @@ class Demande
      * @ORM\JoinColumn(name="REF_FORFAIT_BUDGET", referencedColumnName="CODE_FORFAIT_BUDGET")
      */
     protected $application;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="ForfaitBudget", cascade={"persist"})
-     * @ORM\Column(name="REF_FORFAIT_BUDGET", type="integer")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    protected $application;
-
     /**
      * @var integer
      *
      * @ORM\Column(name="Priorite", type="integer")
      */
     protected $priority;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="Date_emission", type="datetime")
      */
     protected $dateDebut;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="Date_livraison_prevue", type="datetime")
      */
     protected $dateFin;
-
     /**
      * @var float
      *
      * @ORM\Column(name="charge_vendue", type="float")
      */
     protected $chargeTotal;
-
-
-
     /**
      * @return string
      */
@@ -125,7 +88,6 @@ class Demande
     {
         return $this->id;
     }
-
     /**
      * @param string $id
      */
@@ -133,7 +95,6 @@ class Demande
     {
         $this->id = $id;
     }
-
     /**
      * @return string
      */
@@ -141,7 +102,6 @@ class Demande
     {
         return $this->idClientDemande;
     }
-
     /**
      * @param string $idClientDemande
      */
@@ -149,7 +109,6 @@ class Demande
     {
         $this->idClientDemande = $idClientDemande;
     }
-
     /**
      * @return string
      */
@@ -157,7 +116,6 @@ class Demande
     {
         return $this->type;
     }
-
     /**
      * @param string $type
      */
@@ -165,7 +123,6 @@ class Demande
     {
         $this->type = $type;
     }
-
     /**
      * @return string
      */
@@ -173,7 +130,6 @@ class Demande
     {
         return $this->application;
     }
-
     /**
      * @param string $application
      */
@@ -181,7 +137,6 @@ class Demande
     {
         $this->application = $application;
     }
-
     /**
      * @return string
      */
@@ -189,7 +144,6 @@ class Demande
     {
         return $this->objet;
     }
-
     /**
      * @param string $objet
      */
@@ -197,7 +151,6 @@ class Demande
     {
         $this->objet = $objet;
     }
-
     /**
      * @return string
      */
@@ -205,7 +158,6 @@ class Demande
     {
         return $this->responsable;
     }
-
     /**
      * @param string $responsable
      */
@@ -213,7 +165,6 @@ class Demande
     {
         $this->responsable = $responsable;
     }
-
     /**
      * @return int
      */
@@ -221,7 +172,6 @@ class Demande
     {
         return $this->priority;
     }
-
     /**
      * @param int $priority
      */
@@ -229,7 +179,6 @@ class Demande
     {
         $this->priority = $priority;
     }
-
     /**
      * @return \DateTime
      */
@@ -237,7 +186,6 @@ class Demande
     {
         return $this->dateDebut;
     }
-
     /**
      * @param \DateTime $dateDebut
      */
@@ -245,7 +193,6 @@ class Demande
     {
         $this->dateDebut = $dateDebut;
     }
-
     /**
      * @return \DateTime
      */
@@ -253,7 +200,6 @@ class Demande
     {
         return $this->dateFin;
     }
-
     /**
      * @param \DateTime $dateFin
      */
@@ -261,7 +207,6 @@ class Demande
     {
         $this->dateFin = $dateFin;
     }
-
     /**
      * @return float
      */
@@ -269,7 +214,6 @@ class Demande
     {
         return $this->chargeTotal;
     }
-
     /**
      * @param float $chargeTotal
      */
@@ -277,21 +221,4 @@ class Demande
     {
         $this->chargeTotal = $chargeTotal;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getApplication()
-    {
-        return $this->application;
-    }
-
-    /**
-     * @param mixed $application
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-    }
-
 }

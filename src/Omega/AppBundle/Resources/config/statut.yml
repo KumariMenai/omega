@@ -1,0 +1,64 @@
+app:
+    import:
+       statut:
+            mapping:
+              Acknowledgement Requested:	        ACK-RQSTD
+              Add Children:
+              Assigned:                 	        ASSGND
+              Cancelled:                	        CAN
+              Cancelled by Change Request Type:	    CAN-BY-CHGE-RQ-TYP
+              Change Type Requested:	            CHGE-TPE-RQSTD
+              Closed:	CLO
+              Confirm Change Request Type:	        CFRM-CHGE-RQ-TYP
+              Creation In Progress:	                CRE-IN-PROG
+              Deployment to be Confirmed:	        DPLT-TO-CONF
+              Deployed in Production:	            DPLD-IN-PRD
+              Deployed in Pre-Production:	        DPLD-IN-PPR
+              Plan confirmed:	                    PLAN-CONF
+              SLA Quotation Date Reconfirm:
+              Business approval requested:	        BUSS-APP-REQD
+              Refused:	                            REFSD
+              Work In Progress:	                    WIP
+              Validated - SLA Date Review:
+              Frozen:
+              Macro Estimated - Expert Validated:	MAC-EST
+              Evolution review refused:
+              IT Expert Approval Requested:     	IT-SUBMTD
+              Quoted - Expert Validated:
+              Work In Progress - SLA Date Review:	WIP
+              SLA Date Review:	                    SLA-RVW
+              Submitted for review:	                SUBMTD-REV
+              Validated for Quotation:	            VAL-FOR-QUOT
+              Macro estimated:	                    MAC-EST
+              Validated:	                        VAL
+              Validated - OLA Date Review:	        VAL-OLA-DTE-REV
+              Qualified:	                        QUAL
+              SLA Date Review - Reconfirm Date:
+              Change Business Voter:
+              OLA Macro or Quotation Date Reconfirm:
+              Work In Progress - Delivery Date Review:	WIP
+              Update Priority:	                    UPDT-PRIO
+              Submitted:	                        SUBMTD
+              SLA Macro or Quotation Date Reconfirm:
+              Evolution review validated:
+              OLA Macro or Quotation Date Review:	OLA-QUOT-DTE-REV
+              SLA Macro or Quotation Date Review:	SLA-MAC-DTE-REV
+              SLA Quotation Date Review:	        SLA-MAC-DTE-REV
+              OLA Quotation Date Review:	        OLA-QUOT-DTE-REV
+              Refusal Requested:	                REF-REQ
+              Work In Progress - OLA Date Review:	WIP-OLA-RVW
+              Expert Required:
+              Submitted for Deployment in Production:	SUBMTD-DPL-PRD
+              Opened:	                            OPND
+              Pre-Acceptance Testing - SLA Date Review:
+              Validated - Review delivery date:
+              Pending Commitee Decision:	        PEND-COMM-DEC
+              Rejected:	                            REJTD
+              Change Application:	                CHAN-APPLI
+              IT Submitted:	                        IT-SUBMTD
+              Not Submitted:	                    NOT-SUBMTD
+              Submitted for Testing - Reconfirm rework:	SUBMTD-TEST
+              Submitted for Testing:	            SUBMTD-TEST
+              Submitted for Testing - Reconfirm acceptance:	SUBMTD-TEST-REC-ACC
+              Submitted For Acceptance - Comment Mandatory:	SUBMTD-ACC
+              Submitted for Acceptance:	            SUBMTD-ACC

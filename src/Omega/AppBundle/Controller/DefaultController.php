@@ -17,7 +17,27 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $filename = $this->get('kernel')->getRootDir().'/../bin/csv/prototype.csv';
+        $dir = 'C:\Application\omega\bin\csv';
+        $file = scandir($dir);
+        $last_file = 0;
+        foreach ($file as $f){
+            if (filectime($dir.'\\'.$f)>$last_file){
+                $last_file = filectime($dir.'\\'.$f);
+            }
+        }
+
+
+
+        foreach ($file as $f){
+            if (filectime($dir.'\\'.$f) == $last_file){
+                $file_name = $f;
+
+            }
+        }
+
+        $filename = $dir.'\\'.$file_name;
+
+
         ini_set('auto_detect_line_endings',TRUE);
 
         $normalizer = new ObjectNormalizer();
@@ -104,6 +124,7 @@ class DefaultController extends Controller
         $em->flush();
 
         ini_set('auto_detect_line_endings',FALSE);
+
         die('OK !');
     }
 

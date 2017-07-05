@@ -19,6 +19,7 @@ class DefaultController extends Controller
     {
         $dir = 'C:\Application\omega\bin\csv';
         $file = scandir($dir);
+        
         $last_file = 0;
         foreach ($file as $f){
             if (filectime($dir.'\\'.$f)>$last_file){
@@ -27,16 +28,16 @@ class DefaultController extends Controller
         }
 
 
-
         foreach ($file as $f){
             if (filectime($dir.'\\'.$f) == $last_file){
                 $file_name = $f;
-
             }
         }
 
+
         $filename = $dir.'\\'.$file_name;
 
+        //var_dump($filename);die;
 
         ini_set('auto_detect_line_endings',TRUE);
 
@@ -72,7 +73,12 @@ class DefaultController extends Controller
         $mappingDemande    = $this->getParameter('omega.admin.import.demande.mapping');
         $mappingStatus     = $this->getParameter('omega.admin.import.status.mapping');
 
+
+
+
         $handle = fopen($filename,'r');
+
+
         $idDemande = $resultId['id'];
         $idStatus = $resultIdDemandeDansEtat['id'];
 
@@ -83,14 +89,21 @@ class DefaultController extends Controller
             $array = explode(';', $data[0]);
 
 
+
             if(!empty($array) && $array[0] != 'idClientDemande') {
 
-                $statusMappingSplice = array_splice($array,4,-5);
+
+                $statusMappingSplice = array_splice($array,3,-6);
+
+                /*for ($i=0;$i<sizeof($array);$i++){
+                    $array[$i] = str_replace('"','',$array[$i]);
+                }*/
 
 
                 $status = $mappingStatus[$this->filtreData($statusMappingSplice[0])];
 
                 $array = $this->formatData(array_map(array($this, 'filtreData'), array_combine(array_keys($mappingDemande), array_values($array))));
+
 
                 $forfaitObject   = $resultCodeFB[$array['application']];
 
@@ -116,6 +129,7 @@ class DefaultController extends Controller
                 );
                 $demande->setApplication($forfaitObject->getIDFORFAITBUDGET());
 
+var_dump($demande);
                 $em->persist($demande);
                 $em->persist($DemandeSeTrouveDansEtat);
             }
@@ -133,11 +147,9 @@ class DefaultController extends Controller
     }
 
     public function formatData($object) {
-
-
         $object['priority'] = intval($object['priority']);
-        $object['dateDebut'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateDebut']);
-        $object['dateFin'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['dateFin']);
+        $object['dateDebut'] = \DateTime::createFromFormat('d/m/Y H:i:s', $object['dateDebut']);
+        $object['dateFin'] = \DateTime::createFromFormat('d/m/Y H:i:s', $object['dateFin']);
         $object['chargeTotal'] = floatval($object['chargeTotal']);
         //$object['$dateEntree'] = \DateTime::createFromFormat('Y-m-d H:i:s', $object['$dateEntree']);
         //$object['application'] = intval($object['application']);
